@@ -46,19 +46,20 @@ users = cursor.fetchall()
 
 # Выводим результаты
 async def cmd_start_db(user_id, user_name):
-  cursor.execute('SELECT COUNT(*) FROM Users')
+    cursor.execute('SELECT COUNT(*) FROM Users')
 #  total_users = cursor.fetchone()[0]
-  x = 0
-  for user in users:
-    if user[2] == user_id:
-        x += 1
+    x = 0
+    for user in users:
+        print(user[2])
+        if user[2] == user_id:
+            x += 1
     if x >= 1:
         print('новых пользователей нету')
     else:
         cursor.execute('INSERT INTO Users (username, tg_id, clas) VALUES (?, ?, ?)', (user_name, user_id, '8Б'))
         connection.commit()
         print('Новый пользователь добавлен: ', user_id)
-      #  print(user[2])
+    # print(user[2])
 
 
 bot = Bot(token=TOKEN)
@@ -68,7 +69,6 @@ def new_user(user_tg_id, user_name):
 
 class Reg(StatesGroup):
     clas_user = State()
-
 
 # здесь происходить ответ на команду /start
 @dp.message(CommandStart())
