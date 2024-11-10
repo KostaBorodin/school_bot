@@ -25,7 +25,7 @@ cursor.execute('''
   CREATE TABLE IF NOT EXISTS Сomplaints (
   id INTEGER PRIMARY KEY,
   username TEXT NOT NULL,
-  email TEXT NOT NULL,
+  tg_id INTEGER,
   complaint TEXT NOT NULL
   )
   ''')
@@ -54,30 +54,47 @@ async def cmd_start_db(user_id, user_name):
         if user[2] == user_id:
             x += 1
     if x >= 1:
-        print('новых пользователей нету')
+        print('Новых пользователей нет')
     else:
         cursor.execute('INSERT INTO Users (username, tg_id, clas) VALUES (?, ?, ?)', (user_name, user_id, '8Б'))
         connection.commit()
-        print('Новый пользователь добавлен: ', user_id)
+        connection.close()
     # print(user[2])
 
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
-def new_user(user_tg_id, user_name):
-  cursor.execute('INSERT INTO Users (username, tg_id, clas) VALUES (?, ?, ?)', (user_name, user_tg_id, '8Б'))
+
 
 class Reg(StatesGroup):
     clas_user = State()
+    complaints_user = State()
 
 # здесь происходить ответ на команду /start
 @dp.message(CommandStart())
 async def reg_one(message: Message):
-#   await state.set_state(Reg.clas_user)
     await message.answer(text='Добро пожаловать в чат бот Botintegral, буду рад вам помочь, но для начала должен вас придупредить что используя бота вы даёте согласие на использвание и хранения ваших данных (под данными имеется в виду имя и фамилия которые указаны в боте, а также ваш ID телеграмма')
-    await bot.send_message(1410371678, f'В Botintegral зашел пользователь \n{message.from_user.first_name} {message.from_user.last_name}'
-                                    f'\nID: {message.from_user.id}')
+    await bot.send_message(1410371678, f'В Botintegral зашел новый пользователь \n {message.from_user.full_name}'
+                            f'\nID: {message.from_user.id}')
+#   await state.set_state(Reg.clas_user)
     await cmd_start_db(user_id=message.from_user.id, user_name=message.from_user.full_name)
+
+
+@dp.message(Command('hadm'))
+async def cmd_help(message: Message, state: FSMContext):
+    await state.set_state(Reg.complaints_user)
+    await message.answer(text='Опишите пожалуйся ваш вопрос и администрация бота в скором времени вам ответит')
+ #   cursor.execute('INSERT INTO  (username, tg_id, clas) VALUES (?, ?, ?)', (user_name, user_id, '8Б'))
+
+
+@dp.message(Reg.complaints_user)
+async def reg_two(message: Message, state: FSMContext):
+    await state.update_data(complaints_user=message.text)
+    data = await state.get_data()
+    cursor.execute('INSERT INTO Сomplaints (username, tg_id, complaint) VALUES (?, ?, ?)', (message.from_user.full_name, message.from_user.id, f'{data["complaints_user"]}'))
+    await message.answer(f'Ваш вопрос отправлен администратору {data["complaints_user"]}')
+    connection.commit()
+    await state.clear()
 
 
 async def main():
