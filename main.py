@@ -36,7 +36,8 @@ async def reg_one(message: Message):
 #   await state.set_state(Reg.clas_user)
     await add_user(message.from_user.full_name, message.from_user.id, "8Б")
     await bot.send_message(chat_id=ADMIN,
-                           text="gdsds")
+                           text=f'В Botintegral зашел новый пользователь \n {message.from_user.full_name}'
+                           f'\nID: {message.from_user.id}')
 
 
 @dp.message(Command('hadm'))
@@ -50,9 +51,11 @@ async def cmd_help(message: Message, state: FSMContext):
 async def reg_two(message: Message, state: FSMContext):
     await state.update_data(complaints_user=message.text)
     data = await state.get_data()
-    cursor.execute('INSERT INTO Сomplaints (username, tg_id, complaint) VALUES (?, ?, ?)', (message.from_user.full_name, message.from_user.id, f'{data["complaints_user"]}'))
-    await message.answer(f'Ваш вопрос отправлен администратору {data["complaints_user"]}')
-    connection.commit()
+    await complaints_user()
+#    c message.from_user.id, f'{data["complaints_user"]}'))
+    await complaints_user(message.from_user.full_name, message.from_user.id, data["complaints_user"])
+    await message.answer(f'Ваш вопрос отправлен администратору \n'
+                         f'Ваш Вопрос: {data["complaints_user"]}')
     await state.clear()
 
 '''
@@ -62,18 +65,51 @@ async def cmd(message: Message):
     await message.reply(f'{photo_id}')
 '''
 
-@dp.message()
+@dp.message(F.text.lower() == 'расписание 🗓')
 async def cmd_sta(message: Message):
-    if message.text.lower() == 'расписание 🗓':
-        await message.answer_photo(photo=FSInputFile("image/i.webp"),
-                                   caption="Выберите свой класс ниже: ",
-                                   reply_markup=choose_class())
+    await message.answer_photo(photo=FSInputFile("image/schedule.jpg"),
+                               caption="Выберите свой класс ниже: ",
+                               reply_markup=choose_class())
         # await message.answer(RASP_8B)
+
+
+@dp.callback_query(F.data == "picked_8B")
+async def push_schedule_8B(callback: CallbackQuery):
+    await callback.message.delete()
+    await callback.message.answer(RASP_8B, reply_markup=choose_class_back())
+    await callback.answer("Вы выбрали 8Б")
+
 
 @dp.callback_query(F.data == "picked_8A")
 async def push_schedule_8A(callback: CallbackQuery):
-    await callback.message.answer("Вот расписание 8А: ...")
-    await callback.answer("Вы выбрали 8А")
+    await callback.message.delete()
+    await callback.message.answer(RASP_8A, reply_markup=choose_class_back())
+    await callback.answer("Вы выбрали 8A")
+
+
+@dp.callback_query(F.data == "picked_back")
+async def picked_back_8B(callback: CallbackQuery):
+    await callback.message.delete()
+    await callback.message.answer("Выберите свой класс ниже: ", reply_markup=choose_class())
+    await callback.answer("Возвращаю вас на предыдущее окно")
+
+
+# дальше декраторы обрабатывают сообщение без заготовленых ответов
+@dp.callback_query(F.data)
+async def all_callback(callback: CallbackQuery):
+    await callback.answer('Извините, но эта кнопка на этапе разработки')
+
+
+@dp.message(F.text)
+async def all_text(message: Message):
+    await message.delete()
+    await message.answer('Я точно знал ответ на ваше сообщение, но забыл, давайте сделаем вид что вы нечего не отпрвляли')
+
+
+@dp.message(Command)
+async def cmd_all(message: Message):
+    await message.delete()
+    await message.answer(text='Интересная команда, но на неё я не знаю ответа, давайте сделаем вид что вы нечего не отпрвляли')
 
 
 async def main():

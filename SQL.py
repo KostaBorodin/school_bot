@@ -49,4 +49,9 @@ async def add_user(username, tg_id, clas):
         cursor.execute("INSERT INTO Users (username, tg_id, clas) VALUES(?, ?, ?)",
                     (username, tg_id, clas))
         connection.commit()
-    
+
+
+async def complaints_user(username, tg_id, complaint):
+    cursor.execute("INSERT INTO Complaints (username, tg_id, complaint) VALUES(?, ?, ?)",
+                   (username, tg_id, complaint))
+    connection.commit()
