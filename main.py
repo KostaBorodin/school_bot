@@ -3,15 +3,18 @@ import sqlite3 as sq
 
 from config import TOKEN
 import keabort as kb
+import inlain as ikb
+from default_commands import *
 
 from aiogram import Dispatcher, Bot, F
 from aiogram.filters import CommandStart, Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 connection = sq.connect('school_bot.db')
 cursor = connection.cursor()
+
 
 cursor.execute('''
   CREATE TABLE IF NOT EXISTS Users (
@@ -65,6 +68,7 @@ async def cmd_start_db(user_id, user_name):
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
+# set_bot_commands(bot=bot)
 
 
 class Reg(StatesGroup):
@@ -97,6 +101,14 @@ async def reg_two(message: Message, state: FSMContext):
     connection.commit()
     await state.clear()
 
+
+@dp.callback_query(F.data == 'clas_db_8B')
+async def clas_8b(callback: CallbackQuery):
+    await callback.message.delete()
+    await callback.message.answer('После нажаьтя я потом буду апм добавлять в БД')
+    await callback.answer()
+
+
 '''
 @dp.message(F.photo)
 async def cmd(message: Message):
@@ -107,11 +119,8 @@ async def cmd(message: Message):
 @dp.message()
 async def cmd_sta(message: Message):
     if message.text.lower() == 'расписание 🗓':
-        await message.answer_photo('AgACAgIAAxkBAAJ06WcyMDMWFoiCv4Lg7yV-Cf9pN34AA_3hMRvQ45hJHUhvO3SJTcsBAAMCAAN5AAM2BA')
-        await message.answer('''
-Расписание уроков 8Б
-
-ПОНЕДЕЛЬНИК:
+        await message.answer_photo('AgACAgIAAxkBAAJ06WcyMDMWFoiCv4Lg7yV-Cf9pN34AA_3hMRvQ45hJHUhvO3SJTcsBAAMCAAN5AAM2BA', caption='''Расписание уроков 8Б
+ПН:
 [ 8:30 - 9:10   ] Разговоры о не важном
 [ 9:20 - 10:00  ] Информатика
 [ 10:10 - 10:50 ] ОПД
@@ -119,43 +128,40 @@ async def cmd_sta(message: Message):
 [ 12:20 - 13:00 ] Русский язык
 [ 13:15 = 13:55 ] Иностранный язык
 [ 14:05 - 14:45 ] Физкультура
-
-ВТОРНИК:
+ВТ:
 [ 8:30 - 9:10   ] Французкий язык
 [ 9:20 - 10:00  ] География
 [ 10:10 - 10:50 ] Вероятность и статистика
 [ 11:15 - 11:55 ] Химия
 [ 12:20 - 13:00 ] Русский язык
-
-СРЕДА:
+СР:
 [ 8:30 - 9:10   ] История 
 [ 9:20 - 10:00  ] Русский язык
 [ 10:10 - 10:50 ] Физкультура
 [ 11:15 - 11:55 ] Химия
 [ 12:20 - 13:00 ] Алгебра
 [ 13:15 = 13:55 ] Обществознание
-    
-ЧЕТВЕРГ:
+ЧТ:
 [ 8:30 - 9:10   ] Биология
 [ 9:20 - 10:00  ] Литература
 [ 10:10 - 10:50 ] Музыка
 [ 11:15 - 11:55 ] Алгебра
 [ 12:20 - 13:00 ] Алгебра
-
-ПЯТНИЦА:
+ПТ:
 [ 9:20 - 10:00  ] Физика
 [ 10:10 - 10:50 ] Геометрия
 [ 11:15 - 11:55 ] Биология
 [ 12:20 - 13:00 ] История
 [ 13:15 = 13:55 ] История
-
-СУББОТА:
+СБ:
 [ 8:30 - 9:10   ] География
 [ 9:20 - 10:00  ] ОБЗР
 [ 10:10 - 10:50 ] Физика
 [ 11:05 - 11:45 ] Физкультура
 [ 12:00 - 12:40 ] Геометия
-[ 12:50 = 13:30 ] Труд''')
+[ 12:50 = 13:30 ] Труд''', reply_markup=ikb.cmd_start_one)
+
+
 
 
 async def main():
