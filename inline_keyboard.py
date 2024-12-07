@@ -67,6 +67,33 @@ def exams() -> InlineKeyboardMarkup:
     return ikb
 
 
+def preparation_vpr() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="7 класс", callback_data="prepaaration_vpr_7"),
+                InlineKeyboardButton(text="8 класс", callback_data="prepaaration_vpr_8"),
+                InlineKeyboardButton(text="10 класс", callback_data="prepaaration_vpr_10")
+            ]
+        ]
+    )
+    return ikb
+
+
+def preparation_vpr_8_clas() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Математика", callback_data="prepaaration_vpr_8_mat"),
+                InlineKeyboardButton(text="Физика", callback_data="prepaaration_vpr_8_physics"),
+                InlineKeyboardButton(text="Информатика", callback_data="prepaaration_vpr_8_info")
+            ]
+        ]
+    )
+    return ikb
+
+
+
 def links() -> InlineKeyboardMarkup:
     ikb = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -131,3 +158,14 @@ def adm_panele() -> InlineKeyboardMarkup:
     )
     return ikb
 
+
+def back() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Назад 🔙", callback_data="back")
+            ]
+
+        ]
+    )
+    return ikb

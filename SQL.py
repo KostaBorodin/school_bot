@@ -63,6 +63,7 @@ async def add_user_start(username, tg_id, clas, clas_1, admin_new_user, hello_us
         await hello_user
 
 
+# TODO Начало обработки вопроса от пользователя
 async def complaints_user(username, tg_id, complaint):
     cursor.execute("INSERT INTO Сomplaints (username, tg_id, complaint) VALUES(?, ?, ?)",
                    (username, tg_id, complaint))
@@ -107,6 +108,7 @@ async def complaints_user_otvet_4():
     first_user_id = first_user[0]
     cursor.execute('DELETE FROM Сomplaints WHERE id = ?', (first_user_id,))
     connection.commit()
+# TODO Завершение обработки ответа  на вопрос пользователя
 
 '''
 async def complaints_user_otvet(not_complaint, otvet_complaint):
