@@ -10,7 +10,7 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command="ry8b", description="Расписание уроков 8Б 🗓"),
         BotCommand(command="admins", description="Админ панель (доступно только для администраторов)"),
         BotCommand(command="test_start", description="Команда для бета-тестиров (в разработке)"),
-
+        BotCommand(command="offset_russ", description="Проверить мини зачеты по русскому языку"),
     ]
 
     await bot.set_my_commands(

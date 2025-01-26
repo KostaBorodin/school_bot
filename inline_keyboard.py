@@ -60,8 +60,79 @@ def exams() -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text="Зачёты 8 класс", callback_data="offset_8")
             ],
             [
-                InlineKeyboardButton(text="Зачёт 10 класс", callback_data="offset_9")
+                InlineKeyboardButton(text="Зачёт 10 класс", callback_data="offset_10")
             ]
+        ]
+    )
+    return ikb
+
+
+def offset_8_panele() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Русский язык 🖋", callback_data="offset_8_russ")
+            ],
+            [
+                InlineKeyboardButton(text="Геометрия", callback_data="offset_8_geometry")
+            ],
+            [
+                InlineKeyboardButton(text="Физика 💡", callback_data="offset_8_physics")
+            ]
+        ]
+    )
+    return ikb
+
+
+def offset_8_panele_russ() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Посмотреть вопросы 🖋", callback_data="offset_8_russ_vopros")
+            ],
+            [
+                InlineKeyboardButton(text="Ответить на 3 вопроса 🎲", callback_data="offset_8_russ_vopros_random")
+            ],
+            [
+                InlineKeyboardButton(text="Частые ошибки мини зачётов ⚠️", callback_data="offset_8_russ_offset")
+            ]
+        ]
+    )
+    return ikb
+
+
+def offset_7_panele() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Русский язык 🖋", callback_data="offset_7_russ")
+            ],
+            [
+                InlineKeyboardButton(text="Геометрия", callback_data="offset_7_geometry")
+            ]
+        ]
+    )
+    return ikb
+
+
+def offset_10_panele() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Русский язык 🖋", callback_data="offset_10_russ")
+            ]
+        ]
+    )
+    return ikb
+
+
+def offset_random_answer() -> InlineKeyboardMarkup:
+    ikb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Проверить работу ✅", callback_data="offset_random_answer")
+            ]
+
         ]
     )
     return ikb
